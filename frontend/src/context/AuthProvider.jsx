@@ -11,6 +11,7 @@ export const AuthProvider = ({ children }) => {
 
   const token = localStorage.getItem("jwt");
 
+  // Set Authorization header if token exists
   useEffect(() => {
     if (token) {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -19,16 +20,32 @@ export const AuthProvider = ({ children }) => {
     }
   }, [token]);
 
+  // Fetch profile only if token is present
   const fetchProfile = async () => {
+    const token = localStorage.getItem("jwt");
+    if (!token) {
+      setIsAuthenticated(false);
+      setProfile(null);
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     try {
       const { data } = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/users/my-profile`
+        `${import.meta.env.VITE_API_URL}/api/users/my-profile`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       setProfile(data.user);
       setIsAuthenticated(true);
     } catch (error) {
-      console.error("Failed to fetch profile", error);
+      if (error.response?.status !== 401) {
+        console.error("Failed to fetch profile", error);
+      }
       setIsAuthenticated(false);
       setProfile(null);
     } finally {
@@ -46,7 +63,10 @@ export const AuthProvider = ({ children }) => {
       return { success: true, user: data.user };
     } catch (error) {
       console.error("Failed to update profile", error);
-      return { success: false, error: error.response?.data?.message || "Update failed" };
+      return {
+        success: false,
+        error: error.response?.data?.message || "Update failed",
+      };
     }
   };
 
@@ -68,10 +88,17 @@ export const AuthProvider = ({ children }) => {
     setProfile(null);
   };
 
+  // 🔐 Fetch profile only on initial load if token exists
   useEffect(() => {
-    fetchProfile();
+    const token = localStorage.getItem("jwt");
+    if (token) {
+      fetchProfile();
+    } else {
+      setLoading(false); // avoid infinite loading screen
+    }
   }, []);
 
+  // 📚 Fetch blogs only if authenticated
   useEffect(() => {
     if (isAuthenticated) {
       fetchBlogs();

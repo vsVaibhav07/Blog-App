@@ -6,7 +6,7 @@ function CreateBlog() {
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [about, setAbout] = useState("");
-
+  const [loading, setLoading] = useState(false);
   const [blogImage, setBlogImage] = useState("");
   const [blogImagePreview, setBlogImagePreview] = useState("");
 
@@ -22,6 +22,7 @@ function CreateBlog() {
 
   const handleCreateBlog = async (e) => {
     e.preventDefault();
+    setLoading(true);
     const formData = new FormData();
     formData.append("title", title);
     formData.append("category", category);
@@ -39,7 +40,7 @@ function CreateBlog() {
           },
         }
       );
-    
+      setLoading(false);
       toast.success(data.message || "User registered successfully");
       setTitle("");
       setCategory("");
@@ -113,9 +114,14 @@ function CreateBlog() {
 
             <button
               type="submit"
-              className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors duration-200"
+              disabled={loading}
+              className={`w-full py-3 px-4 text-white rounded-md transition-colors duration-200 ${
+                loading
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-blue-600 hover:bg-blue-700"
+              }`}
             >
-              Post Blog
+              {loading ? "Posting..." : "Post Blog"}
             </button>
           </form>
         </div>

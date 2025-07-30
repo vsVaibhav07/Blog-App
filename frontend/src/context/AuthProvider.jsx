@@ -11,24 +11,22 @@ export const AuthProvider = ({ children }) => {
 
   const token = localStorage.getItem("jwt");
 
-  const authHeaders = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  };
+  useEffect(() => {
+    if (token) {
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    } else {
+      delete axios.defaults.headers.common["Authorization"];
+    }
+  }, [token]);
 
-  // Fetch profile
   const fetchProfile = async () => {
     setLoading(true);
     try {
-      if (token) {
-        const { data } = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/users/my-profile`,
-          authHeaders
-        );
-        setProfile(data.user);
-        setIsAuthenticated(true);
-      }
+      const { data } = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/users/my-profile`
+      );
+      setProfile(data.user);
+      setIsAuthenticated(true);
     } catch (error) {
       console.error("Failed to fetch profile", error);
       setIsAuthenticated(false);
@@ -38,13 +36,11 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Update profile
   const updateProfile = async (updatedData) => {
     try {
       const { data } = await axios.put(
         `${import.meta.env.VITE_API_URL}/api/users/update-profile`,
-        updatedData,
-        authHeaders
+        updatedData
       );
       setProfile(data.user);
       return { success: true, user: data.user };
@@ -54,12 +50,10 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Fetch blogs
   const fetchBlogs = async () => {
     try {
       const { data } = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/blogs/all-blogs`,
-        authHeaders
+        `${import.meta.env.VITE_API_URL}/api/blogs/all-blogs`
       );
       setBlogs(data);
     } catch (error) {
@@ -67,10 +61,22 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const logout = () => {
+    localStorage.removeItem("jwt");
+    delete axios.defaults.headers.common["Authorization"];
+    setIsAuthenticated(false);
+    setProfile(null);
+  };
+
   useEffect(() => {
     fetchProfile();
-    fetchBlogs();
   }, []);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchBlogs();
+    }
+  }, [isAuthenticated]);
 
   return (
     <AuthContext.Provider
@@ -83,6 +89,7 @@ export const AuthProvider = ({ children }) => {
         fetchProfile,
         updateProfile,
         loading,
+        logout,
       }}
     >
       {children}

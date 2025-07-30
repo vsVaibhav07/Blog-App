@@ -21,15 +21,19 @@ import axios from "axios";
 
 function App() {
 
-   useEffect(async() => {
-    await axios.get('http://localhost:5000/health')
-      .then((res) => {
-        setStatus(res.data.status);
-      })
-      .catch((err) => {
-        setStatus('Server not responding');
-      });
-  }, []);
+  useEffect(() => {
+  const checkHealth = async () => {
+    try {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/health`);
+    
+    } catch (err) {
+     console.error("Please give some time on running server first time ", err);
+    }
+  };
+
+  checkHealth();
+}, []);
+
 
   const location = useLocation();
   const hideNavbarFooter = ["/dashboard", "/login", "/register"].includes(

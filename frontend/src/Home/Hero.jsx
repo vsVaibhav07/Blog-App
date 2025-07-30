@@ -1,50 +1,79 @@
-import React, { useEffect } from "react";
+import React from "react";
+import Slider from "react-slick";
 import { useAuth } from "../context/AuthProvider";
 import { Link } from "react-router-dom";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 function Hero() {
-  useEffect(() => {}, []);
   const { blogs } = useAuth();
+
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 800,
+    slidesToShow: 4,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 3500,
+    responsive: [
+      {
+        breakpoint: 1024, // tablet
+        settings: {
+          slidesToShow: 2,
+        },
+      },
+      {
+        breakpoint: 640, // mobile
+        settings: {
+          slidesToShow: 1,
+        },
+      },
+    ],
+  };
+
   return (
-    <div className=" container mx-auto my-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-6">
+    <div className="container mx-auto my-10 px-4">
       {blogs && blogs.length > 0 ? (
-        blogs.slice(0, 4).map((element) => {
-          return (
+        <Slider {...settings}>
+          {blogs.map((element) => (
             <Link
               to={`/blog/${element._id}`}
               key={element._id}
-              className="bg-white rounded-lg hover:shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300"
+              className="p-2"
             >
-              <div className="group relative">
-                <img
-                  src={element.blogImage.url}
-                  alt=""
-                  className="w-full h-56 object-cover"
-                />
-                <div className=" absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-75 group-hover:opacity-100 transition-transform duration-300"></div>
-                <h1 className=" absolute bottom-4 left-4 text-white text-xl font-bold group-hover:text-yellow-500 transition-colors duration-300">
-                  {element.title}
-                </h1>
-              </div>
-              <div className="p-6 flex items-center">
-                <img
-                  src={element.adminPhoto}
-                  alt=""
-                  className="w-12 h-12 rounded-full border-2 border-yellow-400"
-                />
-                <div className="ml-4">
-                  <p className="text-lg font-semibold text-gray-800">
-                    {element.adminName}
-                  </p>
-                  <p className="text-xs text-gray-400">New</p>
+              <div className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition duration-300 transform hover:scale-105">
+                <div className="relative group">
+                  <img
+                    src={element.blogImage.url}
+                    alt={element.title}
+                    className="w-full h-56 object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-75 group-hover:opacity-90 transition-all" />
+                  <h2 className="absolute bottom-4 left-4 text-white text-xl font-bold group-hover:text-yellow-400 transition-colors">
+                    {element.title}
+                  </h2>
+                </div>
+                <div className="p-4 flex items-center">
+                  <img
+                    src={element.adminPhoto}
+                    alt={element.adminName}
+                    className="w-12 h-12 rounded-full border-2 border-yellow-500"
+                  />
+                  <div className="ml-4">
+                    <p className="text-lg font-semibold text-gray-800">
+                      {element.adminName}
+                    </p>
+                    <p className="text-sm text-gray-500">New</p>
+                  </div>
                 </div>
               </div>
             </Link>
-          );
-        })
+          ))}
+        </Slider>
       ) : (
-        <div className=" flex h-screen items-center justify-center">
-          Loading....
+        <div className="flex justify-center items-center h-60 text-xl">
+          Loading...
         </div>
       )}
     </div>

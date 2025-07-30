@@ -43,6 +43,9 @@ try {
 app.get("/health", (req, res) => {
   res.send("Server is healthy");
 });
+app.get("/", (req, res) => {
+  res.send("Welcome to the Blog App API");
+});
 app.use("/api/users", userRoute);
 app.use("/api/blogs", blogRoute);
 

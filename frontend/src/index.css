@@ -17,3 +17,22 @@ h1,h2,h3,h4,h5,h6{
 span{
     font-family: 'Fredoka', sans-serif;
 }
+/* Make dots small and clean */
+.react-multi-carousel-dot button {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background-color: #d1d5db; /* Tailwind gray-300 */
+  margin: 0 4px;
+  padding: 0;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.react-multi-carousel-dot--active button {
+  background-color: #2563eb; /* Tailwind blue-600 */
+}
+
+.react-multi-carousel-dot button:hover {
+  background-color: #60a5fa; /* Tailwind blue-400 */
+}

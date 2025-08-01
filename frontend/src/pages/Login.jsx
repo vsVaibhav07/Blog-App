@@ -12,6 +12,12 @@ function Login() {
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
 
+   const token = localStorage.getItem("jwt");
+    if (token) {
+      navigateTo("/");
+      return;
+    }
+
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -26,8 +32,8 @@ function Login() {
           },
         }
       );
-      // Store the token in localStorage
-      localStorage.setItem("jwt", data.token); // storing token in localStorage so that if user refreshed the page it will not redirect again in login
+
+      localStorage.setItem("jwt", data.token); 
       toast.success(data.message || "User Logined successfully", {
         duration: 3000,
       });

@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthProvider";
 import { Link } from "react-router-dom";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import "react-multi-carousel/lib/styles.css";
 
 function Hero() {
   const { blogs } = useAuth();
@@ -13,18 +14,19 @@ function Hero() {
     infinite: true,
     speed: 800,
     slidesToShow: 4,
+    arrows:true,
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 3500,
     responsive: [
       {
-        breakpoint: 1024, // tablet
+        breakpoint: 1024, 
         settings: {
           slidesToShow: 2,
         },
       },
       {
-        breakpoint: 640, // mobile
+        breakpoint: 640, 
         settings: {
           slidesToShow: 1,
         },

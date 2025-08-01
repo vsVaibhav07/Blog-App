@@ -1,6 +1,4 @@
-import React from "react";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
-import { BsYoutube } from "react-icons/bs";
 import { Link } from "react-router-dom";
 
 const Footer = () => {

@@ -9,6 +9,12 @@ function Register() {
 
   const navigateTo = useNavigate();
 
+  const token = localStorage.getItem("jwt");
+    if (token) {
+      navigateTo("/");
+      return;
+    }
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");

@@ -62,13 +62,11 @@ function App() {
          <Route exact path="/contact" element={<Contact/>} />
           <Route exact path="/about" element={<AboutUs/>} />
 
-        {/* Single page route */}
+    
         <Route exact path="/blog/:id" element={<Detail />} />
 
-        {/* Update page route */}
         <Route exact path="/blog/update/:id" element={<UpdateBlog />} />
 
-        {/* Universal route */}
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Toaster />

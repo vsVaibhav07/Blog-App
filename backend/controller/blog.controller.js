@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { Blog } from "../models/blog.model.js";
 import { v2 as cloudinary } from "cloudinary";
 
-// CREATE a new blog
+
 export const createBlog = async (req, res) => {
   try {
     if (!req.files || !req.files.blogImage) {
@@ -60,7 +60,7 @@ export const createBlog = async (req, res) => {
   }
 };
 
-// DELETE a blog
+
 export const deleteBlog = async (req, res) => {
   try {
     const { id } = req.params;
@@ -97,7 +97,7 @@ export const getAllBlogs = async (req, res) => {
   }
 };
 
-// GET single blog
+
 export const getSingleBlogs = async (req, res) => {
   try {
     const { id } = req.params;
@@ -118,7 +118,6 @@ export const getSingleBlogs = async (req, res) => {
   }
 };
 
-// GET blogs created by current user
 export const getMyBlogs = async (req, res) => {
   try {
     const createdBy = req?.user?._id;
@@ -134,7 +133,6 @@ export const getMyBlogs = async (req, res) => {
   }
 };
 
-// UPDATE a blog
 export const updateBlog = async (req, res) => {
   try {
     const { id } = req.params;

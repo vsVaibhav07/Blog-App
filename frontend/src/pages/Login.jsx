@@ -11,6 +11,7 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
+  const [loading,setLoading]=useState(false)
 
    const token = localStorage.getItem("jwt");
     if (token) {
@@ -22,6 +23,7 @@ function Login() {
     e.preventDefault();
 
     try {
+      setLoading(true);
       const { data } = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/users/login`,
         { email, password, role },
@@ -51,6 +53,8 @@ function Login() {
           duration: 3000,
         }
       );
+    } finally{
+      setLoading(false)
     }
   };
 
@@ -101,12 +105,18 @@ function Login() {
                 Register Now
               </Link>
             </p>
-            <button
+            {loading?(<button
+              type="submit"
+              className="w-full p-2 bg-blue-500 hover:bg-blue-800 duration-300 rounded-md text-white"
+            >
+              Logging in
+            </button>):(<button
               type="submit"
               className="w-full p-2 bg-blue-500 hover:bg-blue-800 duration-300 rounded-md text-white"
             >
               Login
-            </button>
+            </button>)}
+            
           </form>
         </div>
       </div>

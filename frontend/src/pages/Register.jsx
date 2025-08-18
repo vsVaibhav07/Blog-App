@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
-import toast from "react-hot-toast";
+import toast, { LoaderIcon } from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthProvider";
 
@@ -20,6 +20,7 @@ function Register() {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
+  const [loading,setLoading]=useState(false);
  
   const [photo, setPhoto] = useState("");
   const [photoPreview, setPhotoPreview] = useState("");
@@ -45,6 +46,7 @@ function Register() {
     
     formData.append("photo", photo);
     try {
+      setLoading(true)
       const { data } = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/users/register`,
         formData,
@@ -55,7 +57,7 @@ function Register() {
           },
         }
       );
-      localStorage.setItem("jwt", data.token); // storing token in localStorage so that if user refreshed the page it will not redirect again in login
+      localStorage.setItem("jwt", data.token); 
       toast.success(data.message || "User registered successfully");
       setProfile(data);
       setIsAuthenticated(true);
@@ -73,6 +75,8 @@ function Register() {
       toast.error(
         error.response.data.message || "Please fill the required fields"
       );
+    } finally{
+      setLoading(false)
     }
   };
 
@@ -154,12 +158,20 @@ function Register() {
                 Login Now
               </Link>
             </p>
-            <button
+            {loading?(<button
+              type="submit"
+              className="w-full p-2 bg-blue-500 flex justify-center items-center hover:bg-blue-800 duration-300 rounded-md text-white"
+            >
+              <LoaderIcon/>
+            </button>):(
+              <button
               type="submit"
               className="w-full p-2 bg-blue-500 hover:bg-blue-800 duration-300 rounded-md text-white"
             >
               Register
             </button>
+            )}
+            
           </form>
         </div>
       </div>
